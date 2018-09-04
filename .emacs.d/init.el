@@ -30,6 +30,8 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (global-set-key (kbd "<M-return>") 'ansi-term)
+
+(global-linum-mode t)
 (setq scroll-conservatively 100)
 (setq ring-bell-function 'ignore)
 (setq make-backup-file nil)
