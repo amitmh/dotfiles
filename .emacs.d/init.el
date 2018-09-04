@@ -7,6 +7,14 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(unless (package-installed-p 'markdown-mode)
+  (package-refresh-contents)
+  (package-install 'markdown-mode))
+
+(unless (package-installed-p 'scala-mode)
+  (package-refresh-contents)
+  (package-install 'scala-mode))
+
 (unless (package-installed-p 'which-key)
   (use-package which-key
   :ensure t
@@ -62,7 +70,7 @@
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
-    (beacon moe-theme which-theme which-key use-package))))
+    (markdown-mode scala-mode beacon moe-theme which-theme which-key use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
