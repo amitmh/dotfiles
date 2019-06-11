@@ -10,10 +10,40 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(unless (package-installed-p 'find-file-in-project)
+  (package-refresh-contents)
+  (package-install 'find-file-in-project))
+
+(global-set-key (kbd "M-p") 'find-file-in-project)
+
+(unless (package-installed-p 'magit)
+  (package-refresh-contents)
+  (package-install 'magit))
+
+;; magit 
+(global-set-key (kbd "C-x g") 'magit-status) 
+
+(unless (package-installed-p 'all-the-icons)
+  (package-refresh-contents)
+  (package-install 'all-the-icons))
+
+(setq inhibit-compacting-font-caches t)
+(use-package all-the-icons :defer 0.5)
+
 
 (unless (package-installed-p 'smex)
   (package-refresh-contents)
   (package-install 'smex))
+
+
+(unless (package-installed-p 'company-lsp)
+  (package-refresh-contents)
+  (package-install 'company-lsp))
+
+(use-package company-lsp)
+
+(add-hook 'after-init-hook 'global-company-mode)
+
 
 (unless (package-installed-p 'eglot)
   (package-refresh-contents)
@@ -48,7 +78,12 @@
   :config
   (add-to-list 'eglot-server-programs '(scala-mode . ("metals-emacs")))
   :hook (scala-mode . eglot-ensure))
+(global-set-key (kbd "C-c h") 'eglot-help-at-point)
+(global-set-key (kbd "C-c C-r") 'xref-find-definitions-other-window)
+(global-set-key (kbd "C-c r") 'xref-find-definitions)
 
+;;(define-key eglot-mode-map (kbd "C-c h") 'eglot-help-at-point)
+;; (define-key eglot-mode-map (kbd "<f6>") 'xref-find-definitions)
 
 ;; Add melpa to your packages repositories
 ;; (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -86,9 +121,11 @@
 ;; 
 ;; 
 
-(use-package vscode-icon
-  :ensure t
-  :commands (vscode-icon-for-file))
+;;  (use-package vscode-icon
+;;  :ensure t
+;;  :commands (vscode-icon-for-file))
+
+
 
 (use-package dired-sidebar
   :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
@@ -195,10 +232,13 @@
  '(custom-safe-themes
    (quote
     ("26d49386a2036df7ccbe802a06a759031e4455f07bda559dcf221f53e8850e69" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
+ '(eglot-auto-display-help-buffer t)
+ '(eglot-connect-timeout 10)
+ '(eglot-sync-connect nil)
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
-    (smex vscode-icon dired-sidebar helm company-lsp lsp-ui lsp-mode ace-window markdown-mode scala-mode beacon moe-theme which-theme which-key use-package))))
+    (find-file-in-project elpa-find-file-in-project magit all-the-icons smex vscode-icon dired-sidebar helm company-lsp lsp-ui lsp-mode ace-window markdown-mode scala-mode beacon moe-theme which-theme which-key use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
