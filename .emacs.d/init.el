@@ -23,7 +23,7 @@
 (use-package projectile
 :ensure t
 :config
-(projectile-global-mode)
+(projectile-mode)
 (setq projectile-completion-system 'ivy))
 (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
@@ -58,6 +58,7 @@
 (unless (package-installed-p 'neotree)
   (package-refresh-contents)
   (package-install 'neotree))
+
 ;; (defun neotree-project-dir ()
 ;;     "Open NeoTree using the git root."
 ;;     (interactive)
@@ -83,6 +84,7 @@
 (global-set-key (kbd "H-p") 'projectile-find-file)
 (global-set-key (kbd "M-p") 'projectile-find-file)
 
+
 (unless (package-installed-p 'magit)
   (package-refresh-contents)
   (package-install 'magit))
@@ -90,7 +92,8 @@
 ;; magit 
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x C-n") 'neotree-toggle)
-(global-set-key (kbd "H-n") 'neotree-toggle) 
+(global-set-key (kbd "H-n") 'neotree-toggle)
+;; (global-set-key (kbd "H-x H-n") 'neotree-project-dir) 
 
 (unless (package-installed-p 'all-the-icons)
   (package-refresh-contents)
