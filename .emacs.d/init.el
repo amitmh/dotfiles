@@ -1,4 +1,8 @@
+;;; package  --- summary
+;;; Commentary:
+
 (require 'package)
+;;; code:
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
@@ -9,19 +13,84 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-
-(unless (package-installed-p 'find-file-in-project)
+(unless (package-installed-p 'projectile)
   (package-refresh-contents)
-  (package-install 'find-file-in-project))
+  (package-install 'projectile))
+(unless (package-installed-p 'counsel-projectile)
+  (package-refresh-contents)
+  (package-install 'counsel-projectile))
 
-(global-set-key (kbd "M-p") 'find-file-in-project)
+(use-package projectile
+:ensure t
+:config
+(projectile-global-mode)
+(setq projectile-completion-system 'ivy))
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+(projectile-mode +1)
+
+(use-package counsel-projectile
+:ensure t
+:config
+(counsel-projectile-mode))
+
+
+
+
+(unless (package-installed-p 'hungry-delete)
+  (package-refresh-contents)
+  (package-install 'hungry-delete))
+
+(use-package hungry-delete
+  :ensure t
+  :config
+  (global-hungry-delete-mode))
+
+(unless (package-installed-p 'expand-region)
+  (package-refresh-contents)
+  (package-install 'expand-region))
+(use-package expand-region
+  :ensure t
+  :config
+  (global-set-key (kbd "C-=") 'er/expand-region))
+
+
+(unless (package-installed-p 'neotree)
+  (package-refresh-contents)
+  (package-install 'neotree))
+;; (defun neotree-project-dir ()
+;;     "Open NeoTree using the git root."
+;;     (interactive)
+;;     (let ((project-dir (projectile-project-root))
+;;           (file-name (buffer-file-name)))
+;;       (neotree-toggle)
+;;       (if project-dir
+;;           (if (neo-global--window-exists-p)
+;;               (progn
+;;                 (neotree-dir project-dir)
+;;                 (neotree-find file-name)))
+;;         (message "Could not find git project root."))))
+
+
+(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+(setq neo-smart-open t)
+
+;;(unless (package-installed-p 'find-file-in-project)
+;;  (package-refresh-contents)
+;;  (package-install 'find-file-in-project))
+
+;; (global-set-key (kbd "M-p") 'find-file-in-project)
+(global-set-key (kbd "H-p") 'projectile-find-file)
+(global-set-key (kbd "M-p") 'projectile-find-file)
 
 (unless (package-installed-p 'magit)
   (package-refresh-contents)
   (package-install 'magit))
 
 ;; magit 
-(global-set-key (kbd "C-x g") 'magit-status) 
+(global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-x C-n") 'neotree-toggle)
+(global-set-key (kbd "H-n") 'neotree-toggle) 
 
 (unless (package-installed-p 'all-the-icons)
   (package-refresh-contents)
@@ -31,9 +100,11 @@
 (use-package all-the-icons :defer 0.5)
 
 
-(unless (package-installed-p 'smex)
-  (package-refresh-contents)
-  (package-install 'smex))
+;;(unless (package-installed-p 'smex)
+;;  (package-refresh-contents)
+;;  (package-install 'smex))
+
+
 
 
 (unless (package-installed-p 'company-lsp)
@@ -124,26 +195,20 @@
 ;;  (use-package vscode-icon
 ;;  :ensure t
 ;;  :commands (vscode-icon-for-file))
+(unless (package-installed-p 'dumb-jump)
+  (package-refresh-contents)
+  (package-install 'dumb-jump))
 
-
-
-(use-package dired-sidebar
-  :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
-  :ensure t
-  :commands (dired-sidebar-toggle-sidebar)
-  :init
-  (add-hook 'dired-sidebar-mode-hook
-            (lambda ()
-              (unless (file-remote-p default-directory)
-                (auto-revert-mode))))
-  :config
-  (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
-  (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
-
-  (setq dired-sidebar-subtree-line-prefix "__")
-  (setq dired-sidebar-theme 'vscode)
-  (setq dired-sidebar-use-term-integration t)
-  (setq dired-sidebar-use-custom-font t))
+(use-package dumb-jump
+  :bind (("M-g o" . dumb-jump-go-other-window)
+	 ("M-g j" . dumb-jump-go)
+	 ("M-g x" . dumb-jump-go-prefer-external)
+	 ("M-g z" . dumb-jump-go-prefer-external-other-window))
+  :config (setq dumb-jump-selector 'ivy) ;; (setq dumb-jump-selector 'helm)
+  :ensure)
+(global-set-key (kbd "H-f") 'dumb-jump-go)
+(global-set-key (kbd "H-b") 'dumb-jump-back)
+(dumb-jump-mode)
 ;; Reload file automatically if changed on disk
   (global-auto-revert-mode 1)
 
@@ -157,7 +222,8 @@
   :ensure t
   :init
   (which-key-mode)))
-
+(which-key-mode)
+(which-key-setup-side-window-right-bottom)
 (setq ido-enable-flex-matching t)
 (setq id-everywhere t)
 (ido-mode 1)
@@ -172,6 +238,9 @@
 (windmove-default-keybindings)
 (when (string= system-type "darwin")       
   (setq dired-use-ls-dired nil))
+
+
+(setq ns-function-modifier 'hyper)  ; make Fn key do Hyper
 
 (use-package ace-window
   :ensure t
@@ -199,9 +268,9 @@
 
 (global-set-key (kbd "<M-return>") 'ansi-term)
 (global-set-key (kbd "<f5>") 'revert-buffer)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+;;(global-set-key (kbd "M-x") 'smex)
+;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;;(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 
 (global-linum-mode t)
@@ -217,9 +286,6 @@
 (scroll-bar-mode -1)
 
 (setq inhibit-startup-message t)
-
-
-;; themes
 (require 'moe-theme)
 (moe-dark)
 
@@ -238,7 +304,7 @@
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
-    (find-file-in-project elpa-find-file-in-project magit all-the-icons smex vscode-icon dired-sidebar helm company-lsp lsp-ui lsp-mode ace-window markdown-mode scala-mode beacon moe-theme which-theme which-key use-package))))
+    (counsel-projectile projectile expand-region hungry-delete find-file-in-project elpa-find-file-in-project magit all-the-icons smex vscode-icon dired-sidebar helm company-lsp lsp-ui lsp-mode ace-window markdown-mode scala-mode beacon moe-theme which-theme which-key use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
