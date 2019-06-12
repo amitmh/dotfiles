@@ -1,4 +1,4 @@
-;;; package  --- summary
+;; package  --- summary
 ;;; Commentary:
 
 (require 'package)
@@ -152,6 +152,7 @@
   :config
   (add-to-list 'eglot-server-programs '(scala-mode . ("metals-emacs")))
   :hook (scala-mode . eglot-ensure))
+
 (global-set-key (kbd "C-c h") 'eglot-help-at-point)
 (global-set-key (kbd "C-c C-r") 'xref-find-definitions-other-window)
 (global-set-key (kbd "C-c r") 'xref-find-definitions)
@@ -209,8 +210,8 @@
 	 ("M-g z" . dumb-jump-go-prefer-external-other-window))
   :config (setq dumb-jump-selector 'ivy) ;; (setq dumb-jump-selector 'helm)
   :ensure)
-(global-set-key (kbd "H-f") 'dumb-jump-go)
-(global-set-key (kbd "H-b") 'dumb-jump-back)
+;; (global-set-key (kbd "H-f") 'dumb-jump-go)
+(global-set-key (kbd "M-g b") 'dumb-jump-back)
 (dumb-jump-mode)
 ;; Reload file automatically if changed on disk
   (global-auto-revert-mode 1)
@@ -244,7 +245,7 @@
 
 
 (setq ns-function-modifier 'hyper)  ; make Fn key do Hyper
-
+(setq w32-apps-modifier 'hyper)
 (use-package ace-window
   :ensure t
   :init
